@@ -1,0 +1,53 @@
+#include<Stepper.h>
+int stepsPerRevolution = 200; // indica que necesitamos 2048 pasos para tener una rotación de 360°
+Stepper stepper1 = Stepper(stepsPerRevolution, 2, 8, 4, 5); // Instancia de clase stepper
+
+// defines pins numbers
+const int stepPin = 5; 
+const int dirPin = 2; 
+const int enPin = 8;
+const int downPin = 4;
+String data[3];
+int index = 0;
+float steps = 0.0;
+
+void setup() {
+  
+  // LOS PINES COMO SALIDAS
+  pinMode(stepPin,OUTPUT); 
+  pinMode(dirPin,OUTPUT);
+
+  pinMode(enPin,OUTPUT);
+  digitalWrite(enPin,LOW);
+  
+  Serial.begin(9600);//bits por segundo
+}
+void loop() {
+if(Serial.available()){ //En este punto hacemos uso de la herramienta Serial para introducir los datos
+  data[index] = Serial.readStringUntil(','); //para separar los datos que introduzcamos por comas
+  Serial.print("data read: "); Serial.println(data[index]); // Para leer la data
+  index++; //incremento de la data
+  
+  if(index==3){
+  index = 0; //si el indice alcanza a 3 se reinicia a 0
+  
+  steps = stepsPerRevolution / 360.0 * data [1].toInt(); // de esta manera conseguimos la cantidad de pasos
+
+for(int x = 0; x < steps; x++) {
+  
+    digitalWrite(stepPin,HIGH); 
+    delayMicroseconds(500); 
+    digitalWrite(stepPin,LOW); 
+    delayMicroseconds(500); }
+    
+delay(1000); //retrazo de 1 segundo para realizar nueva acción
+
+stepper1.setSpeed(data[2].toInt());// Recibir la velocidad
+if(data[0] =="H") stepper1.step(steps);// Sentido Horario
+    else if(data[0] == "C")stepper1.step(-steps);//Sentido Antihorario
+
+  }
+}
+
+  
+}
