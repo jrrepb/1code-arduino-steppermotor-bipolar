@@ -1,5 +1,5 @@
 #include<Stepper.h>
-int stepsPerRevolution = 200; // indica que necesitamos 2048 pasos para tener una rotación de 360°
+int stepsPerRevolution = 200; // indica que necesitamos 200 pasos para tener una rotación de 360°
 Stepper stepper1 = Stepper(stepsPerRevolution, 2, 8, 4, 5); // Instancia de clase stepper
 
 // defines pins numbers
